@@ -6,7 +6,7 @@ const mockProfile = {
   title: "Full Stack Developer",
   subtitle: "BUILD • SCALE • AUTOMATE",
   bioDescription: "I am a full-stack developer with a passion for building user-friendly and visually appealing digital solutions. I work with technologies like HTML, CSS, JavaScript, React, Vue.js, Next.js, PHP, Laravel, Git, and MySQL to create impactful web experiences.",
-  phone: "+91 9106035610",
+  phone: "+91 9106035651",
   email: "krishanrathore3497@gmail.com",
   address: "Ahmedabad, Gujrat",
   language: "English, Hindi, Gujrati",
@@ -15,7 +15,7 @@ const mockProfile = {
   avatarUrl: "/assets/img/krishan-portrait.jpg",
   socialLinks: {
     linkedin: "https://www.linkedin.com/in/krishanrathore97",
-    whatsapp: "https://wa.me/919106035610",
+    whatsapp: "https://wa.me/919106035651",
   },
 };
 
