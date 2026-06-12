@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "prisma:generate": "node node_modules/prisma/build/index.js generate",
-    "postinstall": "node node_modules/prisma/build/index.js generate",
     "predev": "node node_modules/prisma/build/index.js generate",
     "dev": "next dev",
     "prebuild": "node node_modules/prisma/build/index.js generate",
