@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profile {
+  id             String @id @default(cuid())
+  name           String
+  title          String
+  subtitle       String
+  bioDescription String
+  phone          String
+  email          String
+  address        String
+  language       String
+  freelance      String
+  cvUrl          String @default("#")
+  avatarUrl      String @default("/assets/img/krishan-portrait.jpg")
+  socialLinks    Json? // { linkedin?, whatsapp?, github?, twitter? }
+}
+
+model Service {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  iconName    String
+  order       Int    @default(0)
+}
+
+model Skill {
+  id         String @id @default(cuid())
+  name       String
+  percentage Int
+  category   String @default("Tech")
+  order      Int    @default(0)
+}
+
+model TimelineItem {
+  id          String  @id @default(cuid())
+  type        String // "experience" | "education"
+  title       String
+  subtitle    String
+  duration    String
+  description String?
+  order       Int     @default(0)
+}
+
+model PortfolioItem {
+  id         String @id @default(cuid())
+  title      String
+  category   String
+  imageUrl   String
+  projectUrl String
+  order      Int    @default(0)
+}
+
+model Review {
+  id          String @id @default(cuid())
+  clientName  String
+  designation String
+  reviewText  String
+  imageUrl    String @default("")
+  order       Int    @default(0)
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  message   String
+  status    String   @default("unread")
+  createdAt DateTime @default(now())
+}
+
+model Admin {
+  id           String @id @default(cuid())
+  username     String @unique
+  passwordHash String
+}
+
+model HeroSlide {
+  id       String @id @default(cuid())
+  imageUrl String
+  title    String
+  order    Int    @default(0)
+}
