@@ -160,3 +160,36 @@ body {
     linear-gradient(to right, rgba(197, 155, 76, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(197, 155, 76, 0.04) 1px, transparent 1px);
 }
+
+/* Premium Form Controls */
+.form-input-premium {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--foreground);
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .form-input-premium {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.form-input-premium:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--background);
+  box-shadow: 0 0 0 4px rgba(197, 155, 76, 0.12);
+}
+
+.form-label-premium {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  color: var(--foreground);
+  transition: color 0.2s ease;
+}
+

@@ -11,11 +11,11 @@ export default function Footer({ whatsappUrl }: FooterProps) {
 
   return (
     <footer className="bg-bg-dark border-t border-graphite/10 py-8 relative">
-      <div className="container mx-auto px-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+      <div className="container mx-auto px-4 md:px-8 flex flex-col sm:flex-row justify-center items-center gap-4 text-center sm:text-left">
         {/* Copyright info */}
         <p className="text-text-secondary text-sm font-light">
           &copy; {currentYear}. Designed & Developed by{" "}
-          <span className="text-primary font-semibold">KKR</span>. All rights reserved.
+          <span className="text-primary font-semibold">Krishan Kumar Rathore</span>. All rights reserved.
         </p>
 
         {/* Dynamic signature */}

@@ -251,17 +251,51 @@ async function seed() {
     ],
   });
 
+  // 7.5 Seed Banners
+  console.log("Seeding banners...");
+  await prisma.banner.deleteMany({});
+  await prisma.banner.createMany({
+    data: [
+      {
+        title: "Krishan Rathore Business Card",
+        category: "Business Card",
+        imageUrl: "https://placehold.co/800x450?text=Krishan+Rathore+Business+Card",
+        projectUrl: "https://www.linkedin.com/in/krishanrathore97",
+        description: "My digital business card. Scan to save contact details or visit my profile directly.",
+        order: 1,
+      },
+      {
+        title: "Doorstep Filings Launch",
+        category: "Deployed Features",
+        imageUrl: "https://placehold.co/800x450?text=Doorstep+Filings+Launch",
+        projectUrl: "https://doorstepfilings.com/",
+        description: "Successfully built and deployed the full platform features for business registration.",
+        order: 2,
+      },
+      {
+        title: "Next.js Portfolio Release v2.0",
+        category: "Others",
+        imageUrl: "https://placehold.co/800x450?text=Next.js+Portfolio+v2.0",
+        projectUrl: "https://github.com/krishanrathore1997/kkrportfolio",
+        description: "Upgraded user experience with dynamic settings, custom pages, and a secure admin backend panel.",
+        order: 3,
+      },
+    ],
+  });
+
   // 8. Seed Admin Credentials
   console.log("Seeding admin credentials...");
   await prisma.admin.deleteMany({});
   const salt = await bcrypt.genSalt(10);
-  const passwordHash = await bcrypt.hash("kkr@portfolio2026", salt);
+  const passwordHash = await bcrypt.hash("Krishan@3497", salt);
   await prisma.admin.create({
     data: {
       username: "admin",
+      email: "krishanrathore3497@gmail.com",
       passwordHash: passwordHash,
     },
   });
+
 
   console.log("Database seeded successfully!");
   await prisma.$disconnect();

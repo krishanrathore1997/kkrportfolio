@@ -169,9 +169,8 @@ export default function PortfolioEditor({ initialItems }: PortfolioEditorProps) 
             {items.map((item) => (
               <div
                 key={item.id}
-                className={`glass-panel overflow-hidden rounded-2xl border flex flex-col group transition-all duration-300 ${
-                  editingId === item.id ? "border-primary bg-primary/5" : "border-black/5"
-                }`}
+                className={`glass-panel overflow-hidden rounded-2xl border flex flex-col group transition-all duration-300 ${editingId === item.id ? "border-primary bg-primary/5" : "border-black/5"
+                  }`}
               >
                 {/* Project Image Preview */}
                 <div className="relative h-44 w-full bg-black/5 overflow-hidden shrink-0">
@@ -193,7 +192,7 @@ export default function PortfolioEditor({ initialItems }: PortfolioEditorProps) 
                   <h4 className="font-bold text-text-primary text-sm group-hover:text-primary transition-colors mb-1 line-clamp-1">
                     {item.title}
                   </h4>
-                  
+
                   <div className="flex items-center gap-1.5 text-xs text-text-secondary mt-1.5 font-light">
                     <LinkIcon className="w-3 h-3 text-primary shrink-0" />
                     <a
@@ -326,7 +325,7 @@ export default function PortfolioEditor({ initialItems }: PortfolioEditorProps) 
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-black font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer text-xs"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer text-xs"
             >
               {editingId ? <Save className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
               {loading ? "Saving..." : editingId ? "Update Project" : "Add Project"}

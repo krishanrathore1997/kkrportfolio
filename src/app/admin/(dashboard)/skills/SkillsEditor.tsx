@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { addSkill, updateSkill, deleteSkill } from "../../actions";
-import { Plus, Edit2, Trash2, Award, Save, X } from "lucide-react";
+import { Plus, Edit2, Trash2, Save, X } from "lucide-react";
 
 interface SkillItem {
   id: string;
@@ -78,6 +78,8 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
             title: "Success!",
             text: "Skill updated successfully.",
             icon: "success",
+            background: "#ffffff",
+            color: "#1F2937",
             timer: 2000,
             showConfirmButton: false,
           });
@@ -93,6 +95,8 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
             title: "Success!",
             text: "Skill created successfully.",
             icon: "success",
+            background: "#ffffff",
+            color: "#1F2937",
             timer: 2000,
             showConfirmButton: false,
           }).then(() => {
@@ -107,6 +111,9 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
         title: "Error!",
         text: err.message || "Failed to save skill.",
         icon: "error",
+        background: "#ffffff",
+        color: "#1F2937",
+        confirmButtonColor: "#C59B4C",
       });
     } finally {
       setLoading(false);
@@ -122,6 +129,8 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
       confirmButtonColor: "#C59B4C",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
+      background: "#ffffff",
+      color: "#1F2937",
     });
 
     if (confirm.isConfirmed) {
@@ -134,6 +143,8 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
             title: "Deleted!",
             text: "Skill deleted successfully.",
             icon: "success",
+            background: "#ffffff",
+            color: "#1F2937",
             timer: 2000,
             showConfirmButton: false,
           });
@@ -145,6 +156,9 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
           title: "Error!",
           text: err.message || "Failed to delete skill.",
           icon: "error",
+          background: "#ffffff",
+          color: "#1F2937",
+          confirmButtonColor: "#C59B4C",
         });
       } finally {
         setLoading(false);
@@ -158,18 +172,20 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Skills list grouped by category */}
-      <div className="lg:col-span-2 space-y-6">
-        <h3 className="text-lg font-bold text-text-primary">Current Skills List</h3>
+      <div className="lg:col-span-2 space-y-8 animate-reveal">
+        <h3 className="text-lg font-black text-text-primary tracking-wide border-b border-black/5 dark:border-white/5 pb-2">
+          Current Skills Matrix
+        </h3>
 
         {skills.length === 0 ? (
-          <div className="glass-panel p-10 text-center text-text-secondary rounded-2xl">
-            No skills configured yet. Add skills to make them appear here.
+          <div className="glass-panel-premium p-12 text-center text-text-secondary rounded-3xl shadow-sm">
+            No skills configured yet. Add skills using the editor panel to make them appear here.
           </div>
         ) : (
           categories.map((cat) => (
-            <div key={cat} className="space-y-3">
-              <h4 className="text-xs uppercase tracking-wider font-bold text-primary border-b border-black/5 pb-1">
-                {cat}
+            <div key={cat} className="space-y-4">
+              <h4 className="text-xs uppercase tracking-widest font-black text-primary border-l-2 border-primary pl-2">
+                {cat} Category
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {skills
@@ -177,38 +193,37 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
                   .map((skill) => (
                     <div
                       key={skill.id}
-                      className={`glass-panel p-4 rounded-xl border flex justify-between items-center group transition-all duration-300 ${
-                        editingId === skill.id ? "border-primary bg-primary/5" : "border-black/5"
-                      }`}
+                      className={`glass-panel-premium p-5 rounded-2xl flex justify-between items-center group transition-all duration-300 border ${editingId === skill.id ? "border-primary bg-primary/5 shadow-md shadow-primary/5" : "border-black/5"
+                        }`}
                     >
-                      <div className="space-y-1.5 flex-grow pr-4">
+                      <div className="space-y-2.5 flex-grow pr-4">
                         <div className="flex justify-between items-center text-xs">
                           <span className="font-bold text-text-primary">{skill.name}</span>
-                          <span className="font-semibold text-primary">{skill.percentage}%</span>
+                          <span className="font-extrabold text-primary">{skill.percentage}%</span>
                         </div>
                         {/* Progress Bar visual indicator */}
-                        <div className="w-full bg-black/5 rounded-full h-1.5 overflow-hidden">
+                        <div className="w-full bg-black/5 dark:bg-white/5 rounded-full h-1.5 overflow-hidden">
                           <div
                             className="bg-primary h-full rounded-full transition-all duration-500"
                             style={{ width: `${skill.percentage}%` }}
                           />
                         </div>
-                        <span className="text-[10px] text-text-secondary block font-bold">
-                          Order: {skill.order}
+                        <span className="text-[10px] text-text-secondary block font-semibold">
+                          Sort Order: {skill.order}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1.5 border-l border-black/5 pl-3">
+                      <div className="flex items-center gap-1.5 border-l border-black/5 dark:border-white/5 pl-3">
                         <button
                           onClick={() => handleEditClick(skill)}
-                          className="p-1.5 bg-black/5 hover:bg-primary hover:text-black rounded-lg text-text-primary transition-all cursor-pointer"
+                          className="p-2 bg-black/5 dark:bg-white/5 hover:bg-primary hover:text-black rounded-lg text-text-primary transition-all cursor-pointer"
                           title="Edit Skill"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(skill.id)}
-                          className="p-1.5 bg-black/5 hover:bg-red-500 hover:text-white rounded-lg text-red-500 transition-all cursor-pointer"
+                          className="p-2 bg-black/5 dark:bg-white/5 hover:bg-red-500 hover:text-white rounded-lg text-red-500 transition-all cursor-pointer"
                           title="Delete Skill"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -224,53 +239,53 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
 
       {/* Skills Editor Form */}
       <div>
-        <div className="glass-panel p-6 rounded-2xl space-y-6 sticky top-24">
-          <div className="flex justify-between items-center border-b border-black/5 pb-3">
-            <h3 className="font-bold text-text-primary text-md">
+        <div className="glass-panel-premium p-6 sm:p-8 rounded-3xl space-y-6 sticky top-24 shadow-xl">
+          <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-3">
+            <h3 className="font-bold text-text-primary text-sm uppercase tracking-wider">
               {editingId ? "Edit Skill" : "Add New Skill"}
             </h3>
             {editingId && (
               <button
                 onClick={resetForm}
-                className="text-xs text-text-secondary hover:text-red-500 flex items-center gap-1 cursor-pointer"
+                className="text-xs text-text-secondary hover:text-red-500 flex items-center gap-1 cursor-pointer font-bold"
               >
-                <X className="w-3 h-3" /> Cancel
+                <X className="w-3.5 h-3.5" /> Cancel
               </button>
             )}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name */}
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Skill Name</label>
+            <div className="space-y-1.5">
+              <label className="form-label-premium">Skill Name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g. Next.js / TypeScript"
-                className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors"
+                className="form-input-premium"
                 required
               />
             </div>
 
             {/* Category */}
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Category Group</label>
+            <div className="space-y-1.5">
+              <label className="form-label-premium">Category Group</label>
               <div className="grid grid-cols-2 gap-2">
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors col-span-1"
+                  className="form-input-premium col-span-1"
                 >
                   {COMMON_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-bg-card">
+                    <option key={cat} value={cat} className="bg-bg-card text-text-primary">
                       {cat}
                     </option>
                   ))}
                   {!COMMON_CATEGORIES.includes(formData.category) && (
-                    <option value={formData.category} className="bg-bg-card">
+                    <option value={formData.category} className="bg-bg-card text-text-primary">
                       Custom: {formData.category}
                     </option>
                   )}
@@ -280,17 +295,17 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  placeholder="Or type custom category"
-                  className="px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors col-span-1"
+                  placeholder="Or custom name"
+                  className="form-input-premium col-span-1"
                 />
               </div>
             </div>
 
             {/* Percentage Slider */}
-            <div className="space-y-1">
-              <div className="flex justify-between items-center text-xs">
-                <label className="font-semibold text-text-secondary">Level / Percentage</label>
-                <span className="font-bold text-primary">{formData.percentage}%</span>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="form-label-premium">Level / Percentage</label>
+                <span className="font-black text-primary text-sm">{formData.percentage}%</span>
               </div>
               <input
                 type="range"
@@ -299,20 +314,20 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
                 max="100"
                 value={formData.percentage}
                 onChange={handleChange}
-                className="w-full h-1.5 bg-black/5 rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-1.5 bg-black/5 dark:bg-white/5 rounded-lg appearance-none cursor-pointer accent-primary"
               />
             </div>
 
             {/* Display Order */}
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Sort Order</label>
+            <div className="space-y-1.5">
+              <label className="form-label-premium">Sort Order</label>
               <input
                 type="number"
                 name="order"
                 value={formData.order}
                 onChange={handleChange}
                 placeholder="e.g. 1"
-                className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors"
+                className="form-input-premium"
                 required
               />
             </div>
@@ -321,9 +336,9 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-black font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer text-xs"
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-white font-black uppercase tracking-wider rounded-xl hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer text-xs shadow-lg shadow-primary/10"
             >
-              {editingId ? <Save className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+              {editingId ? <Save className="w-4 h-4 text-black" /> : <Plus className="w-4 h-4 text-black" />}
               {loading ? "Saving..." : editingId ? "Update Skill" : "Add Skill"}
             </button>
           </form>
@@ -332,3 +347,4 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
     </div>
   );
 }
+

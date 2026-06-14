@@ -285,3 +285,40 @@ export async function deleteHeroSlide(id: string) {
     return { success: false, message: error.message };
   }
 }
+
+/* ==========================================================================
+   Banners Slider CRUD
+   ========================================================================== */
+export async function addBanner(data: any) {
+  try {
+    await verifyAdminSession();
+    await prisma.banner.create({ data });
+    revalidatePath("/");
+    return { success: true, message: "Banner added successfully!" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function updateBanner(id: string, data: any) {
+  try {
+    await verifyAdminSession();
+    await prisma.banner.update({ where: { id }, data });
+    revalidatePath("/");
+    return { success: true, message: "Banner updated successfully!" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function deleteBanner(id: string) {
+  try {
+    await verifyAdminSession();
+    await prisma.banner.delete({ where: { id } });
+    revalidatePath("/");
+    return { success: true, message: "Banner deleted successfully!" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+

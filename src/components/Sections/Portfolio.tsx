@@ -18,7 +18,6 @@ interface PortfolioProps {
 
 export default function Portfolio({ portfolio }: PortfolioProps) {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
   const [lightbox, setLightbox] = useState<{ type: "image" | "figma"; url: string } | null>(null);
 
   // Extract unique categories dynamically
@@ -31,10 +30,7 @@ export default function Portfolio({ portfolio }: PortfolioProps) {
 
   // Filter items
   const filteredItems = portfolio.filter((item) => {
-    const matchesCategory = activeFilter === "All" || item.category === activeFilter;
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          item.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return activeFilter === "All" || item.category === activeFilter;
   });
 
   return (
@@ -54,54 +50,52 @@ export default function Portfolio({ portfolio }: PortfolioProps) {
           </h2>
         </div>
 
-        {/* Search Bar & Category Filters Container */}
-        <div className="flex flex-col items-center gap-6 mb-12 max-w-4xl mx-auto">
-          {/* Search Input */}
-          <div className="relative w-full max-w-md">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-              <svg className="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </span>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search projects by title or category..."
-              className="w-full pl-12 pr-4 py-3 rounded-full bg-bg-subtle border border-border-subtle text-text-primary text-sm placeholder-text-secondary focus:outline-none focus:border-primary/50 focus:bg-bg-dark focus:shadow-md transition-all duration-300"
-            />
-          </div>
-
-          {/* Filter Categories Tabs */}
-          <div className="flex flex-wrap justify-center items-center gap-3">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
-                  activeFilter === category
-                    ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105 cursor-pointer"
-                    : "bg-bg-subtle text-text-secondary hover:text-text-primary hover:bg-bg-subtle-hover cursor-pointer"
+        {/* Category Filters Container */}
+        <div className="flex flex-wrap justify-center items-center gap-3 mb-12 max-w-4xl mx-auto">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveFilter(category)}
+              className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${activeFilter === category
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105 cursor-pointer"
+                  : "bg-bg-subtle text-text-secondary hover:text-text-primary hover:bg-bg-subtle-hover cursor-pointer"
                 }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+            >
+              {category}
+            </button>
+          ))}
         </div>
 
         {/* Dynamic Project Grid */}
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item) => (
-              <motion.div
+              <motion.a
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.45 }}
                 key={item.id}
-                className="group relative rounded-3xl bg-bg-card border border-border-subtle overflow-hidden shadow-lg aspect-[4/3] flex flex-col justify-end"
+                href={item.projectUrl && item.projectUrl !== "#" ? item.projectUrl : undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative rounded-3xl bg-bg-card border border-border-subtle overflow-hidden shadow-lg aspect-[4/3] flex flex-col justify-end cursor-pointer"
+                onClick={(e) => {
+                  // If they clicked a button specifically, don't trigger the card link redirect
+                  const target = e.target as HTMLElement;
+                  if (target.closest("button")) {
+                    e.preventDefault();
+                  } else if (!item.projectUrl || item.projectUrl === "#") {
+                    e.preventDefault();
+                    // Open lightbox as default click action if no projectUrl
+                    if (isFigmaUrl(item.projectUrl)) {
+                      setLightbox({ type: "figma", url: item.projectUrl });
+                    } else {
+                      setLightbox({ type: "image", url: item.imageUrl });
+                    }
+                  }
+                }}
               >
                 {/* Project Image */}
                 <img
@@ -113,11 +107,40 @@ export default function Portfolio({ portfolio }: PortfolioProps) {
                   }}
                 />
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center gap-4 z-10" />
+                {/* Mobile Bottom Bar (visible only on mobile) */}
+                <div className="md:hidden absolute bottom-0 left-0 right-0 p-4 bg-black/75 backdrop-blur-md border-t border-white/10 z-20 flex justify-between items-center">
+                  <div className="text-left min-w-0 pr-2">
+                    <h4 className="text-sm font-bold text-white truncate">{item.title}</h4>
+                    <span className="text-[10px] text-primary uppercase font-bold tracking-wider">{item.category}</span>
+                  </div>
+                  <div className="flex gap-2 shrink-0">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (isFigmaUrl(item.projectUrl)) {
+                          setLightbox({ type: "figma", url: item.projectUrl });
+                        } else {
+                          setLightbox({ type: "image", url: item.imageUrl });
+                        }
+                      }}
+                      className="w-8 h-8 rounded-lg bg-white/10 text-white flex items-center justify-center active:bg-primary active:text-black transition-colors"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </button>
+                    {item.projectUrl && item.projectUrl !== "#" && (
+                      <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center">
+                        <ExternalLink className="w-4 h-4" />
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-                {/* Interactions Showcase */}
-                <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center items-center gap-4 text-center px-6">
+                {/* Overlay (desktop hover only) */}
+                <div className="hidden md:flex absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-col justify-center items-center gap-4 z-10" />
+
+                {/* Interactions Showcase (desktop hover only) */}
+                <div className="hidden md:flex absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 flex-col justify-center items-center gap-4 text-center px-6">
                   <h3 className="text-xl font-bold text-white tracking-wide translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                     {item.title}
                   </h3>
@@ -129,7 +152,9 @@ export default function Portfolio({ portfolio }: PortfolioProps) {
                   <div className="flex gap-4 mt-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">
                     {/* View Image Lightbox Button */}
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         if (isFigmaUrl(item.projectUrl)) {
                           setLightbox({ type: "figma", url: item.projectUrl });
                         } else {
@@ -142,18 +167,15 @@ export default function Portfolio({ portfolio }: PortfolioProps) {
                     </button>
                     {/* External Link Button */}
                     {item.projectUrl && item.projectUrl !== "#" && (
-                      <a
-                        href={item.projectUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <span
                         className="w-11 h-11 rounded-full bg-white/10 hover:bg-primary hover:text-white text-white flex items-center justify-center transition-all duration-300 backdrop-blur-sm shadow-md"
                       >
                         <ExternalLink className="w-5 h-5" />
-                      </a>
+                      </span>
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </motion.a>
             ))}
           </AnimatePresence>
         </motion.div>

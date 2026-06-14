@@ -14,18 +14,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if admin exists in database (fallback to default credentials if seed was skipped)
-    let admin = await prisma.admin.findUnique({
-      where: { username: username.toLowerCase() },
+    // Check if admin exists in database (find by username OR email)
+    let admin = await prisma.admin.findFirst({
+      where: {
+        OR: [
+          { username: username.toLowerCase() },
+          { email: username.toLowerCase() }
+        ]
+      },
     });
 
-    if (!admin && username.toLowerCase() === "admin") {
+    if (!admin && (username.toLowerCase() === "admin" || username.toLowerCase() === "krishanrathore3497@gmail.com")) {
       // Create default admin account dynamically if not seeded! Great fail-safety!
       const salt = await bcrypt.genSalt(10);
-      const defaultPasswordHash = await bcrypt.hash("kkr@portfolio2026", salt);
+      const defaultPasswordHash = await bcrypt.hash("Krishan@3497", salt);
       admin = await prisma.admin.create({
         data: {
           username: "admin",
+          email: "krishanrathore3497@gmail.com",
           passwordHash: defaultPasswordHash,
         },
       });

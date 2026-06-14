@@ -13,8 +13,10 @@ export default function Header({ phone }: HeaderProps) {
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const currentTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
@@ -91,9 +93,9 @@ export default function Header({ phone }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isSticky
-        ? "glass-panel py-4 shadow-sm border-b"
-        : "bg-transparent py-6 border-b border-transparent"
+      className={`fixed glass-panel top-0 left-0 w-full z-50 transition-all duration-300 ${isSticky
+        ? "py-4 shadow-sm border-b"
+        : "py-6 border-b border-transparent"
         }`}
     >
       <div className="container mx-auto px-4 md:px-8 flex justify-between items-center">
@@ -102,9 +104,9 @@ export default function Header({ phone }: HeaderProps) {
           onClick={(e) => handleLinkClick(e, "home")}
           className="flex items-center gap-3 group"
         >
-          <span className="relative flex h-[56px] w-[56px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-primary/25 bg-[#070707] shadow-[0_8px_22px_rgba(62,64,69,0.16)] transition-transform duration-300 group-hover:scale-105">
+          <span className="relative flex h-[56px] w-[56px] shrink-0 items-center justify-center overflow-hidden rounded-2xl transition-transform duration-300 group-hover:scale-105">
             <img
-              src={theme === "dark" ? "/assets/img/dark-logo.png" : "/assets/img/white-logo.png"}
+              src={theme == "light" ? "/assets/img/white-logo.png" : "/assets/img/dark-logo.png"}
               alt="Build By Krish logo"
               className="h-full w-full object-cover"
               onError={(e) => {
@@ -151,7 +153,9 @@ export default function Header({ phone }: HeaderProps) {
             className="p-2.5 rounded-full hover:bg-bg-subtle text-text-primary hover:text-primary transition-colors duration-300 cursor-pointer ml-2"
             aria-label="Toggle Theme"
           >
-            {theme === "light" ? (
+            {!mounted ? (
+              <Moon className="w-4 h-4" />
+            ) : theme === "light" ? (
               <Moon className="w-4 h-4" />
             ) : (
               <Sun className="w-4 h-4 text-primary" />
@@ -200,7 +204,9 @@ export default function Header({ phone }: HeaderProps) {
               className="p-2.5 rounded-full hover:bg-bg-subtle text-text-primary hover:text-primary transition-colors duration-300 cursor-pointer"
               aria-label="Toggle Theme"
             >
-              {theme === "light" ? (
+              {!mounted ? (
+                <Moon className="w-5 h-5" />
+              ) : theme === "light" ? (
                 <Moon className="w-5 h-5" />
               ) : (
                 <Sun className="w-5 h-5 text-primary" />

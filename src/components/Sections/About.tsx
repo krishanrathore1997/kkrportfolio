@@ -59,7 +59,7 @@ export default function About({ profile }: AboutProps) {
               <div className="lg:col-span-5 flex justify-center relative w-full">
                 {/* Glow ring under image */}
                 <div className="absolute w-[220px] h-[220px] rounded-full bg-primary/10 blur-[45px] -z-10 pointer-events-none" />
-                
+
                 <div className="relative group w-full max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden glass-panel border border-black/5 dark:border-white/10 shadow-2xl flex items-center justify-center bg-black/5">
                   <img
                     src={profile.avatarUrl}
@@ -82,7 +82,7 @@ export default function About({ profile }: AboutProps) {
                     {profile.title} / {profile.subtitle}
                   </h4>
                 </div>
-                
+
                 <p className="text-text-secondary leading-relaxed text-sm md:text-base font-light">
                   {profile.bioDescription}
                 </p>
@@ -122,7 +122,7 @@ export default function About({ profile }: AboutProps) {
                   <a
                     href={profile.cvUrl}
                     download
-                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-primary text-black font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-primary-hover hover:scale-105 active:scale-[0.98] transition-all duration-300 shadow-lg shadow-primary/15 cursor-pointer"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-primary-hover hover:scale-105 active:scale-[0.98] transition-all duration-300 shadow-lg shadow-primary/15 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                     Download CV

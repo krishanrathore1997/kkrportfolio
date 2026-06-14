@@ -179,6 +179,36 @@ const mockHeroSlides = [
   { id: "hs11", imageUrl: "/assets/hero slider/slide-11.png", title: "Laravel & PHP Backend", order: 11 },
 ];
 
+const mockBanners = [
+  {
+    id: "b1",
+    title: "Krishan Rathore Business Card",
+    category: "Business Card",
+    imageUrl: "https://placehold.co/800x450?text=Krishan+Rathore+Business+Card",
+    projectUrl: "https://www.linkedin.com/in/krishanrathore97",
+    description: "My digital business card. Scan to save contact details or visit my profile directly.",
+    order: 1,
+  },
+  {
+    id: "b2",
+    title: "Doorstep Filings Launch",
+    category: "Deployed Features",
+    imageUrl: "https://placehold.co/800x450?text=Doorstep+Filings+Launch",
+    projectUrl: "https://doorstepfilings.com/",
+    description: "Successfully built and deployed the full platform features for business registration.",
+    order: 2,
+  },
+  {
+    id: "b3",
+    title: "Next.js Portfolio Release v2.0",
+    category: "Others",
+    imageUrl: "https://placehold.co/800x450?text=Next.js+Portfolio+v2.0",
+    projectUrl: "https://github.com/krishanrathore1997/kkrportfolio",
+    description: "Upgraded user experience with dynamic settings, custom pages, and a secure admin backend panel.",
+    order: 3,
+  },
+];
+
 export async function getPortfolioData() {
   try {
     // Fetch profile (first record)
@@ -209,6 +239,10 @@ export async function getPortfolioData() {
     const heroSlidesDocs = await prisma.heroSlide.findMany({ orderBy: { order: "asc" } });
     const heroSlides = heroSlidesDocs.length > 0 ? heroSlidesDocs : mockHeroSlides;
 
+    // Fetch banners
+    const bannersDocs = await prisma.banner.findMany({ orderBy: { order: "asc" } });
+    const banners = bannersDocs.length > 0 ? bannersDocs : mockBanners;
+
     return {
       profile,
       services,
@@ -217,6 +251,7 @@ export async function getPortfolioData() {
       portfolio,
       reviews,
       heroSlides,
+      banners,
     };
   } catch (error) {
     console.error("Database connection or query failed. Using mock fallbacks.", error);
@@ -228,6 +263,7 @@ export async function getPortfolioData() {
       portfolio: mockPortfolio,
       reviews: mockReviews,
       heroSlides: mockHeroSlides,
+      banners: mockBanners,
     };
   }
 }

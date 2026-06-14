@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/client"
 }
 
 datasource db {
@@ -77,9 +78,12 @@ model ContactSubmission {
 }
 
 model Admin {
-  id           String @id @default(cuid())
-  username     String @unique
+  id           String    @id @default(cuid())
+  username     String    @unique
+  email        String?   @unique
   passwordHash String
+  resetToken   String?   @unique
+  resetExpiry  DateTime?
 }
 
 model HeroSlide {
@@ -88,3 +92,14 @@ model HeroSlide {
   title    String
   order    Int    @default(0)
 }
+
+model Banner {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  imageUrl    String
+  projectUrl  String?
+  description String?
+  order       Int      @default(0)
+}
+

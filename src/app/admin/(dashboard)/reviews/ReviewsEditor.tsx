@@ -169,9 +169,8 @@ export default function ReviewsEditor({ initialReviews }: ReviewsEditorProps) {
             {reviews.map((review) => (
               <div
                 key={review.id}
-                className={`glass-panel p-6 rounded-2xl border flex flex-col md:flex-row gap-4 justify-between transition-all duration-300 ${
-                  editingId === review.id ? "border-primary bg-primary/5" : "border-black/5"
-                }`}
+                className={`glass-panel p-6 rounded-2xl border flex flex-col md:flex-row gap-4 justify-between transition-all duration-300 ${editingId === review.id ? "border-primary bg-primary/5" : "border-black/5"
+                  }`}
               >
                 {/* Client Profile and Text */}
                 <div className="flex gap-4 items-start">
@@ -320,7 +319,7 @@ export default function ReviewsEditor({ initialReviews }: ReviewsEditorProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-black font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer text-xs"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer text-xs"
             >
               {editingId ? <Save className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
               {loading ? "Saving..." : editingId ? "Update Review" : "Add Review"}

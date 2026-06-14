@@ -127,7 +127,7 @@ export default function Hero({ name, title, subtitle, heroSlides }: HeroProps) {
             >
               Creative & Scalable Digital Products
             </motion.span>
-            
+
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight leading-tight">
               Hi, I am <br />
               <div className="h-[48px] sm:h-[60px] md:h-[72px] relative overflow-hidden mt-1 select-none">
@@ -196,7 +196,7 @@ export default function Hero({ name, title, subtitle, heroSlides }: HeroProps) {
             <a
               href="#portfolio"
               onClick={(e) => handleScrollClick(e, "portfolio")}
-              className="w-full sm:w-auto px-7 py-3.5 bg-primary text-black font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-primary-hover active:scale-[0.98] transition-all duration-300 shadow-lg shadow-primary/20 text-center inline-flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-7 py-3.5 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-primary-hover active:scale-[0.98] transition-all duration-300 shadow-lg shadow-primary/20 text-center inline-flex items-center justify-center gap-2 cursor-pointer"
             >
               <Terminal className="w-4 h-4" /> View My Work
             </a>
@@ -279,9 +279,8 @@ export default function Hero({ name, title, subtitle, heroSlides }: HeroProps) {
                   <button
                     key={idx}
                     onClick={() => handleDotClick(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                      slideIndex === idx ? "bg-primary w-6" : "bg-white/40 hover:bg-white/80 w-2"
-                    }`}
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${slideIndex === idx ? "bg-primary w-6" : "bg-white/40 hover:bg-white/80 w-2"
+                      }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}

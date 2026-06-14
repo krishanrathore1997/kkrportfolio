@@ -193,13 +193,26 @@ exports.Prisma.ContactSubmissionScalarFieldEnum = {
 exports.Prisma.AdminScalarFieldEnum = {
   id: 'id',
   username: 'username',
-  passwordHash: 'passwordHash'
+  email: 'email',
+  passwordHash: 'passwordHash',
+  resetToken: 'resetToken',
+  resetExpiry: 'resetExpiry'
 };
 
 exports.Prisma.HeroSlideScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
   title: 'title',
+  order: 'order'
+};
+
+exports.Prisma.BannerScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  category: 'category',
+  imageUrl: 'imageUrl',
+  projectUrl: 'projectUrl',
+  description: 'description',
   order: 'order'
 };
 
@@ -239,7 +252,8 @@ exports.Prisma.ModelName = {
   Review: 'Review',
   ContactSubmission: 'ContactSubmission',
   Admin: 'Admin',
-  HeroSlide: 'HeroSlide'
+  HeroSlide: 'HeroSlide',
+  Banner: 'Banner'
 };
 
 /**
