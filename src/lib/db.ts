@@ -1,6 +1,7 @@
 import { PrismaClient } from "@/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import { parse as parseConnectionString } from "pg-connection-string";
 import dotenv from "dotenv";
 import path from "path";
 
@@ -16,9 +17,20 @@ let prismaInstance: PrismaClient;
 if (globalForPrisma.prisma) {
   prismaInstance = globalForPrisma.prisma;
 } else {
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-  });
+  const connectionString = process.env.DATABASE_URL || "";
+  const isSupabase = connectionString.includes("supabase") || connectionString.includes("sslmode=require");
+
+  let pool: Pool;
+  if (isSupabase) {
+    const config = parseConnectionString(connectionString);
+    config.ssl = { rejectUnauthorized: false };
+    pool = new Pool(config as any);
+  } else {
+    pool = new Pool({
+      connectionString,
+    });
+  }
+
   const adapter = new PrismaPg(pool);
   prismaInstance = new PrismaClient({ adapter });
 }
