@@ -53,9 +53,9 @@ export async function updateProfile(data: any) {
 export async function addService(data: any) {
   try {
     await verifyAdminSession();
-    await prisma.service.create({ data });
+    const service = await prisma.service.create({ data });
     revalidatePath("/");
-    return { success: true, message: "Service added successfully!" };
+    return { success: true, message: "Service added successfully!", data: service };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
@@ -89,9 +89,9 @@ export async function deleteService(id: string) {
 export async function addSkill(data: any) {
   try {
     await verifyAdminSession();
-    await prisma.skill.create({ data });
+    const skill = await prisma.skill.create({ data });
     revalidatePath("/");
-    return { success: true, message: "Skill added successfully!" };
+    return { success: true, message: "Skill added successfully!", data: skill };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
@@ -125,9 +125,9 @@ export async function deleteSkill(id: string) {
 export async function addTimelineItem(data: any) {
   try {
     await verifyAdminSession();
-    await prisma.timelineItem.create({ data });
+    const item = await prisma.timelineItem.create({ data });
     revalidatePath("/");
-    return { success: true, message: "Timeline item added successfully!" };
+    return { success: true, message: "Timeline item added successfully!", data: item };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
@@ -161,9 +161,9 @@ export async function deleteTimelineItem(id: string) {
 export async function addPortfolioItem(data: any) {
   try {
     await verifyAdminSession();
-    await prisma.portfolioItem.create({ data });
+    const item = await prisma.portfolioItem.create({ data });
     revalidatePath("/");
-    return { success: true, message: "Project added successfully!" };
+    return { success: true, message: "Project added successfully!", data: item };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
@@ -197,9 +197,9 @@ export async function deletePortfolioItem(id: string) {
 export async function addReview(data: any) {
   try {
     await verifyAdminSession();
-    await prisma.review.create({ data });
+    const review = await prisma.review.create({ data });
     revalidatePath("/");
-    return { success: true, message: "Review added successfully!" };
+    return { success: true, message: "Review added successfully!", data: review };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
@@ -256,9 +256,9 @@ export async function deleteLead(id: string) {
 export async function addHeroSlide(data: any) {
   try {
     await verifyAdminSession();
-    await prisma.heroSlide.create({ data });
+    const slide = await prisma.heroSlide.create({ data });
     revalidatePath("/");
-    return { success: true, message: "Hero slide added successfully!" };
+    return { success: true, message: "Hero slide added successfully!", data: slide };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
@@ -292,9 +292,9 @@ export async function deleteHeroSlide(id: string) {
 export async function addBanner(data: any) {
   try {
     await verifyAdminSession();
-    await prisma.banner.create({ data });
+    const banner = await prisma.banner.create({ data });
     revalidatePath("/");
-    return { success: true, message: "Banner added successfully!" };
+    return { success: true, message: "Banner added successfully!", data: banner };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

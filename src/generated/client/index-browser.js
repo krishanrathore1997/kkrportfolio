@@ -133,7 +133,9 @@ exports.Prisma.ProfileScalarFieldEnum = {
   freelance: 'freelance',
   cvUrl: 'cvUrl',
   avatarUrl: 'avatarUrl',
-  socialLinks: 'socialLinks'
+  socialLinks: 'socialLinks',
+  metaDescription: 'metaDescription',
+  keywords: 'keywords'
 };
 
 exports.Prisma.ServiceScalarFieldEnum = {

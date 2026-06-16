@@ -24,9 +24,13 @@ async function seed() {
       freelance: "Available",
       cvUrl: "#",
       avatarUrl: "/assets/img/krishan-portrait.jpg",
+      metaDescription: "Krishan Kumar Rathore is a professional Full Stack Software Engineer and Developer based in Ahmedabad, Gujarat, specializing in Laravel, React, Vue, and Next.js.",
+      keywords: "Krishan Rathore, Full Stack Developer, Software Engineer, Web Development, Ahmedabad, Laravel, React, Next.js",
       socialLinks: {
         linkedin: "https://www.linkedin.com/in/krishanrathore97",
         whatsapp: "https://wa.me/919106035651",
+        instagram: "https://instagram.com/username",
+        facebook: "https://facebook.com/username",
       },
     },
   });

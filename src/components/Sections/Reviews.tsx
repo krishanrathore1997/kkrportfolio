@@ -83,7 +83,10 @@ export default function Reviews({ reviews }: ReviewsProps) {
                       alt={reviews[currentIndex].clientName}
                       className="w-12 h-12 rounded-full object-cover border border-white/10"
                       onError={(e) => {
-                        e.currentTarget.src = `https://api.dicebear.com/7.x/initials/svg?seed=${reviews[currentIndex].clientName}`;
+                        e.currentTarget.onerror = null;
+                        const name = reviews[currentIndex]?.clientName || "User";
+                        const initials = name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "?";
+                        e.currentTarget.src = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23c59b4c'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='bold' fill='%23ffffff'>${initials}</text></svg>`;
                       }}
                     />
                   )}

@@ -4,6 +4,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Phone, Menu, X, Sun, Moon } from "lucide-react";
 
+const NAV_LINKS = [
+  { name: "Home", href: "#home", id: "home" },
+  { name: "About", href: "#about", id: "about" },
+  { name: "Services", href: "#services", id: "services" },
+  { name: "Resume", href: "#resume", id: "resume" },
+  { name: "Portfolio", href: "#portfolio", id: "portfolio" },
+  { name: "Contact", href: "#contact", id: "contact" },
+];
+
 interface HeaderProps {
   phone: string;
 }
@@ -41,15 +50,6 @@ export default function Header({ phone }: HeaderProps) {
     }
   };
 
-  const navLinks = [
-    { name: "Home", href: "#home", id: "home" },
-    { name: "About", href: "#about", id: "about" },
-    { name: "Services", href: "#services", id: "services" },
-    { name: "Resume", href: "#resume", id: "resume" },
-    { name: "Portfolio", href: "#portfolio", id: "portfolio" },
-    { name: "Contact", href: "#contact", id: "contact" },
-  ];
-
   useEffect(() => {
     const handleScroll = () => {
       // Sticky header
@@ -61,7 +61,7 @@ export default function Header({ phone }: HeaderProps) {
 
       // Active link highlighting
       const scrollPosition = window.scrollY + 200;
-      for (const link of navLinks) {
+      for (const link of NAV_LINKS) {
         const element = document.getElementById(link.id);
         if (element) {
           const top = element.offsetTop;
@@ -110,7 +110,8 @@ export default function Header({ phone }: HeaderProps) {
               alt="Build By Krish logo"
               className="h-full w-full object-cover"
               onError={(e) => {
-                e.currentTarget.src = "https://placehold.co/150x150/d4af37/ffffff?text=KKR";
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><rect width='150' height='150' fill='%23c59b4c'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='36' font-weight='bold' fill='%23ffffff'>KKR</text></svg>";
               }}
             />
           </span>
@@ -122,7 +123,7 @@ export default function Header({ phone }: HeaderProps) {
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6">
-            {navLinks.map((link) => (
+            {NAV_LINKS.map((link) => (
               <li key={link.id}>
                 <a
                   href={link.href}
@@ -176,7 +177,7 @@ export default function Header({ phone }: HeaderProps) {
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-bg-dark border-b border-border-subtle py-6 px-4 animate-reveal">
           <ul className="flex flex-col gap-4">
-            {navLinks.map((link) => (
+            {NAV_LINKS.map((link) => (
               <li key={link.id}>
                 <a
                   href={link.href}

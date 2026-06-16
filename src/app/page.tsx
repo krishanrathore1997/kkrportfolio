@@ -1,6 +1,9 @@
 import React from "react";
 import { getPortfolioData } from "@/lib/data";
 
+import { Metadata } from 'next';
+import { prisma } from "@/lib/db";
+
 // Import UI Sections
 import Header from "@/components/Sections/Header";
 import Hero from "@/components/Sections/Hero";
@@ -17,6 +20,42 @@ import ShareWidget from "@/components/ShareWidget";
 
 // Force Next.js to render the page dynamically on every request (ensures instant DB updates)
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await prisma.profile.findFirst();
+  
+  if (!profile) {
+    return {
+      title: "Portfolio",
+      description: "My portfolio site",
+    };
+  }
+
+  const keywordsArray = profile.keywords 
+    ? profile.keywords.split(',').map(k => k.trim()) 
+    : [profile.title, profile.name, "portfolio"];
+
+  return {
+    title: `${profile.name} - ${profile.title}`,
+    description: profile.metaDescription || profile.bioDescription,
+    keywords: keywordsArray,
+    openGraph: {
+      title: `${profile.name} - ${profile.title}`,
+      description: profile.metaDescription || profile.bioDescription,
+      url: '/',
+      siteName: profile.name,
+      images: [
+        {
+          url: profile.avatarUrl,
+          width: 800,
+          height: 600,
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+  };
+}
 
 export default async function Home() {
   const { profile, services, skills, timeline, portfolio, reviews, heroSlides, banners } = await getPortfolioData();
@@ -67,6 +106,8 @@ export default async function Home() {
           socialLinks={{
             linkedin: social.linkedin,
             whatsapp: social.whatsapp,
+            instagram: social.instagram,
+            facebook: social.facebook,
           }}
         />
       </main>

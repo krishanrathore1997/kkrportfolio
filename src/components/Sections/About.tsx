@@ -66,7 +66,8 @@ export default function About({ profile }: AboutProps) {
                     alt={profile.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                     onError={(e) => {
-                      e.currentTarget.src = "https://placehold.co/600x800?text=Profile+Image";
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'><rect width='600' height='800' fill='%2318181b'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='32' fill='%239ca3af'>Profile Image</text></svg>";
                     }}
                   />
                 </div>

@@ -8,19 +8,21 @@ datasource db {
 }
 
 model Profile {
-  id             String @id @default(cuid())
-  name           String
-  title          String
-  subtitle       String
-  bioDescription String
-  phone          String
-  email          String
-  address        String
-  language       String
-  freelance      String
-  cvUrl          String @default("#")
-  avatarUrl      String @default("/assets/img/krishan-portrait.jpg")
-  socialLinks    Json? // { linkedin?, whatsapp?, github?, twitter? }
+  id              String  @id @default(cuid())
+  name            String
+  title           String
+  subtitle        String
+  bioDescription  String
+  phone           String
+  email           String
+  address         String
+  language        String
+  freelance       String
+  cvUrl           String  @default("#")
+  avatarUrl       String  @default("/assets/img/krishan-portrait.jpg")
+  socialLinks     Json?   // { linkedin?, whatsapp?, github?, twitter?, instagram?, facebook? }
+  metaDescription String?
+  keywords        String?
 }
 
 model Service {

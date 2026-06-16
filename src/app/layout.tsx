@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const interSans = Inter({
   variable: "--font-inter",
@@ -176,6 +177,20 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-bg-dark text-text-primary selection:bg-primary selection:text-white transition-colors duration-300">
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-TFL3LWSLV8"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TFL3LWSLV8');
+          `}
+        </Script>
         {children}
       </body>
     </html>

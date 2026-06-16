@@ -12,9 +12,11 @@ export default function ShareWidget() {
   const shareText = "Check out Krishan Kumar Rathore's personal portfolio! A dynamic Full Stack Software Engineer.";
 
   useEffect(() => {
-    // Safely set client-side URL
-    setShareUrl(window.location.href);
-  }, []);
+    // Safely set client-side URL when open
+    if (isOpen) {
+      setShareUrl(window.location.href);
+    }
+  }, [isOpen]);
 
   const handleCopyLink = async () => {
     try {

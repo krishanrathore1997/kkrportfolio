@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { addReview, updateReview, deleteReview } from "../../actions";
+import ImageUploadField from "@/components/ImageUploadField";
 import { Plus, Edit2, Trash2, Quote, Save, X, User } from "lucide-react";
 
 interface ReviewItem {
@@ -90,18 +91,21 @@ export default function ReviewsEditor({ initialReviews }: ReviewsEditorProps) {
       } else {
         // Create
         const res = await addReview(formData);
-        if (res.success) {
+        if (res.success && res.data) {
+          setReviews((prev) =>
+            [...prev, res.data]
+              .sort((a, b) => a.order - b.order)
+          );
           Swal.fire({
             title: "Success!",
             text: "Review added successfully.",
             icon: "success",
             timer: 2000,
             showConfirmButton: false,
-          }).then(() => {
-            window.location.reload();
           });
+          resetForm();
         } else {
-          throw new Error(res.message);
+          throw new Error(res.message || "Failed to create review.");
         }
       }
     } catch (err: any) {
@@ -174,18 +178,18 @@ export default function ReviewsEditor({ initialReviews }: ReviewsEditorProps) {
               >
                 {/* Client Profile and Text */}
                 <div className="flex gap-4 items-start">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/5 shrink-0 flex items-center justify-center text-text-secondary">
-                    {review.imageUrl ? (
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/5 shrink-0 flex items-center justify-center text-text-secondary relative">
+                    <User className="w-6 h-6 absolute inset-0 m-auto" />
+                    {review.imageUrl && (
                       <img
                         src={review.imageUrl}
                         alt={review.clientName}
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover z-10 bg-white dark:bg-bg-card"
                         onError={(e) => {
-                          e.currentTarget.src = ""; // Force fallback to Icon
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.style.display = "none";
                         }}
                       />
-                    ) : (
-                      <User className="w-6 h-6" />
                     )}
                   </div>
                   <div className="space-y-2">
@@ -248,69 +252,65 @@ export default function ReviewsEditor({ initialReviews }: ReviewsEditorProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Client Name */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Client Name</label>
+              <label className="form-label-premium">Client Name</label>
               <input
                 type="text"
                 name="clientName"
                 value={formData.clientName}
                 onChange={handleChange}
                 placeholder="e.g. Richard Miles"
-                className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors"
+                className="form-input-premium"
                 required
               />
             </div>
 
             {/* Designation */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Client Designation / Company</label>
+              <label className="form-label-premium">Client Designation / Company</label>
               <input
                 type="text"
                 name="designation"
                 value={formData.designation}
                 onChange={handleChange}
                 placeholder="e.g. CEO, Founder"
-                className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors"
+                className="form-input-premium"
                 required
               />
             </div>
 
             {/* Image URL */}
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Client Photo URL (Optional)</label>
-              <input
-                type="text"
-                name="imageUrl"
-                value={formData.imageUrl}
-                onChange={handleChange}
-                placeholder="e.g. /assets/img/client/client.png"
-                className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors"
-              />
-            </div>
+            <ImageUploadField
+              label="Client Photo URL (Optional)"
+              name="imageUrl"
+              value={formData.imageUrl}
+              onChange={(url) => setFormData(prev => ({ ...prev, imageUrl: url }))}
+              placeholder="e.g. /assets/img/client/client.png"
+            />
 
             {/* Display Order */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Sort Order</label>
+              <label className="form-label-premium">Sort Order</label>
               <input
                 type="number"
                 name="order"
                 value={formData.order}
                 onChange={handleChange}
                 placeholder="e.g. 1"
-                className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors"
+                className="form-input-premium"
                 required
               />
             </div>
 
             {/* Review Text */}
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Testimonial Comment</label>
+              <label className="form-label-premium">Testimonial Comment</label>
               <textarea
                 name="reviewText"
                 value={formData.reviewText}
                 onChange={handleChange}
                 rows={5}
                 placeholder="Paste client recommendation description..."
-                className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/5 text-text-primary text-xs focus:outline-none focus:border-primary/50 transition-colors resize-none"
+                className="form-input-premium resize-none"
                 required
               />
             </div>

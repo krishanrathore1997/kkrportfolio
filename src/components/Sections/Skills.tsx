@@ -132,7 +132,6 @@ interface SkillCardProps {
 function SkillCard({ skill }: SkillCardProps) {
   const [imageError, setImageError] = useState(false);
   const logoUrl = getSkillLogoUrl(skill.name);
-  const IconComponent = getSkillIcon(skill.name, skill.category);
 
   return (
     <motion.div
@@ -152,7 +151,9 @@ function SkillCard({ skill }: SkillCardProps) {
             onError={() => setImageError(true)}
           />
         ) : (
-          <IconComponent className="w-5 h-5 text-primary group-hover:text-primary-hover transition-colors" />
+          React.createElement(getSkillIcon(skill.name, skill.category), {
+            className: "w-5 h-5 text-primary group-hover:text-primary-hover transition-colors"
+          })
         )}
       </div>
       <div className="space-y-0.5 min-w-0">

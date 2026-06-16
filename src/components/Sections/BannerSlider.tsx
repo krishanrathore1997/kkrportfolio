@@ -230,7 +230,8 @@ export default function BannerSlider({ banners }: BannerSliderProps) {
                   alt={currentBanner.title}
                   className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => {
-                    e.currentTarget.src = "https://placehold.co/800x450?text=Banner+Graphic";
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'><rect width='800' height='450' fill='%2318181b'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='28' fill='%239ca3af'>Banner Graphic</text></svg>";
                   }}
                 />
               </AnimatePresence>

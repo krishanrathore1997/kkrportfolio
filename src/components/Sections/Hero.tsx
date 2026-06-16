@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDown, Terminal, Send, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
 
@@ -19,7 +19,7 @@ interface HeroProps {
 }
 
 export default function Hero({ name, title, subtitle, heroSlides }: HeroProps) {
-  const words = [name, title, subtitle];
+  const words = useMemo(() => [name, title, subtitle], [name, title, subtitle]);
   const [wordIndex, setWordIndex] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right
@@ -28,13 +28,31 @@ export default function Hero({ name, title, subtitle, heroSlides }: HeroProps) {
     { id: "hs-fallback", imageUrl: "/assets/hero slider/slide-1.png", title: "Web Design Architecture", order: 1 }
   ];
 
+  const handlePrevSlide = useCallback(() => {
+    if (slides.length <= 1) return;
+    setDirection(-1);
+    setSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  }, [slides.length]);
+
+  const handleNextSlide = useCallback(() => {
+    if (slides.length <= 1) return;
+    setDirection(1);
+    setSlideIndex((prev) => (prev + 1) % slides.length);
+  }, [slides.length]);
+
+  const handleDotClick = (idx: number) => {
+    setDirection(idx > slideIndex ? 1 : -1);
+    setSlideIndex(idx);
+  };
+
   // Auto-play word loop
   useEffect(() => {
+    const length = words.length;
     const wordInterval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % words.length);
+      setWordIndex((prev) => (prev + 1) % length);
     }, 3200);
     return () => clearInterval(wordInterval);
-  }, []);
+  }, [words.length]);
 
   // Auto-play background/slider image loop
   useEffect(() => {
@@ -43,24 +61,7 @@ export default function Hero({ name, title, subtitle, heroSlides }: HeroProps) {
       handleNextSlide();
     }, 4500);
     return () => clearInterval(slideInterval);
-  }, [slideIndex, slides.length]);
-
-  const handlePrevSlide = () => {
-    if (slides.length <= 1) return;
-    setDirection(-1);
-    setSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
-  const handleNextSlide = () => {
-    if (slides.length <= 1) return;
-    setDirection(1);
-    setSlideIndex((prev) => (prev + 1) % slides.length);
-  };
-
-  const handleDotClick = (idx: number) => {
-    setDirection(idx > slideIndex ? 1 : -1);
-    setSlideIndex(idx);
-  };
+  }, [slideIndex, slides.length, handleNextSlide]);
 
   const handleScrollClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -205,7 +206,7 @@ export default function Hero({ name, title, subtitle, heroSlides }: HeroProps) {
               onClick={(e) => handleScrollClick(e, "contact")}
               className="w-full sm:w-auto px-7 py-3.5 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-text-primary font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-black/10 dark:hover:bg-white/10 hover:border-primary/30 transition-all duration-300 text-center inline-flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Send className="w-4 h-4 text-primary" /> Let's Connect
+              <Send className="w-4 h-4 text-primary" /> Let&apos;s Connect
             </a>
           </motion.div>
         </div>

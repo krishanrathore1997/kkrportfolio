@@ -32,6 +32,14 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
     order: 0,
   });
 
+  const getSwalConfig = () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    return {
+      background: isDark ? "#17191E" : "#ffffff",
+      color: isDark ? "#F3F4F6" : "#1F2937",
+    };
+  };
+
   const resetForm = () => {
     setFormData({
       name: "",
@@ -64,6 +72,8 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
     e.preventDefault();
     setLoading(true);
 
+    const swalConfig = getSwalConfig();
+
     try {
       if (editingId) {
         // Update
@@ -78,10 +88,9 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
             title: "Success!",
             text: "Skill updated successfully.",
             icon: "success",
-            background: "#ffffff",
-            color: "#1F2937",
             timer: 2000,
             showConfirmButton: false,
+            ...swalConfig,
           });
           resetForm();
         } else {
@@ -90,20 +99,22 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
       } else {
         // Create
         const res = await addSkill(formData);
-        if (res.success) {
+        if (res.success && res.data) {
+          setSkills((prev) =>
+            [...prev, res.data]
+              .sort((a, b) => a.order - b.order)
+          );
           Swal.fire({
             title: "Success!",
             text: "Skill created successfully.",
             icon: "success",
-            background: "#ffffff",
-            color: "#1F2937",
             timer: 2000,
             showConfirmButton: false,
-          }).then(() => {
-            window.location.reload();
+            ...swalConfig,
           });
+          resetForm();
         } else {
-          throw new Error(res.message);
+          throw new Error(res.message || "Failed to create skill.");
         }
       }
     } catch (err: any) {
@@ -111,9 +122,8 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
         title: "Error!",
         text: err.message || "Failed to save skill.",
         icon: "error",
-        background: "#ffffff",
-        color: "#1F2937",
         confirmButtonColor: "#C59B4C",
+        ...swalConfig,
       });
     } finally {
       setLoading(false);
@@ -121,6 +131,7 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
   };
 
   const handleDelete = async (id: string) => {
+    const swalConfig = getSwalConfig();
     const confirm = await Swal.fire({
       title: "Are you sure?",
       text: "This skill will be permanently removed.",
@@ -129,8 +140,7 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
       confirmButtonColor: "#C59B4C",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-      background: "#ffffff",
-      color: "#1F2937",
+      ...swalConfig,
     });
 
     if (confirm.isConfirmed) {
@@ -143,10 +153,9 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
             title: "Deleted!",
             text: "Skill deleted successfully.",
             icon: "success",
-            background: "#ffffff",
-            color: "#1F2937",
             timer: 2000,
             showConfirmButton: false,
+            ...swalConfig,
           });
         } else {
           throw new Error(res.message);
@@ -156,15 +165,15 @@ export default function SkillsEditor({ initialSkills }: SkillsEditorProps) {
           title: "Error!",
           text: err.message || "Failed to delete skill.",
           icon: "error",
-          background: "#ffffff",
-          color: "#1F2937",
           confirmButtonColor: "#C59B4C",
+          ...swalConfig,
         });
       } finally {
         setLoading(false);
       }
     }
   };
+
 
   // Group skills by category for nice visual display
   const categories = Array.from(new Set(skills.map((s) => s.category)));

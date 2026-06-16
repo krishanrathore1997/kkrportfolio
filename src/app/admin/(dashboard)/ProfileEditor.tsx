@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { updateProfile } from "../actions";
-import { Save, User, MapPin, Globe, Phone, Mail, Link2, FileText, Briefcase } from "lucide-react";
+import ImageUploadField from "@/components/ImageUploadField";
+import { Save, User, Link2, FileText, Briefcase, Search } from "lucide-react";
 
 interface ProfileEditorProps {
   initialProfile: any;
@@ -22,9 +23,13 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
     freelance: initialProfile.freelance || "",
     cvUrl: initialProfile.cvUrl || "",
     avatarUrl: initialProfile.avatarUrl || "",
+    metaDescription: initialProfile.metaDescription || "",
+    keywords: initialProfile.keywords || "",
     socialLinks: {
       linkedin: initialProfile.socialLinks?.linkedin || "",
       whatsapp: initialProfile.socialLinks?.whatsapp || "",
+      instagram: initialProfile.socialLinks?.instagram || "",
+      facebook: initialProfile.socialLinks?.facebook || "",
     },
   });
   const [saving, setSaving] = useState(false);
@@ -56,27 +61,32 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
 
     setSaving(false);
 
+    const isDark = document.documentElement.classList.contains("dark");
+    const swalConfig = {
+      background: isDark ? "#17191E" : "#ffffff",
+      color: isDark ? "#F3F4F6" : "#1F2937",
+    };
+
     if (res.success) {
       Swal.fire({
         title: "Success!",
         text: res.message,
         icon: "success",
-        background: "#ffffff",
-        color: "#1F2937",
-        timer: 3000,
+        timer: 2000,
         showConfirmButton: false,
+        ...swalConfig,
       });
     } else {
       Swal.fire({
         title: "Failed!",
         text: res.message || "Something went wrong.",
         icon: "error",
-        background: "#ffffff",
-        color: "#1F2937",
         confirmButtonColor: "#C59B4C",
+        ...swalConfig,
       });
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="glass-panel-premium p-6 sm:p-10 rounded-3xl space-y-8 shadow-xl">
@@ -124,18 +134,16 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
               required
             />
           </div>
-          <div className="space-y-1.5">
-            <label className="form-label-premium">Profile Portrait Image URL</label>
-            <input
-              type="text"
-              name="avatarUrl"
-              value={formData.avatarUrl}
-              onChange={handleChange}
-              placeholder="e.g. /assets/img/krishan-portrait.jpg"
-              className="form-input-premium"
-              required
-            />
-          </div>
+          <ImageUploadField
+            label="Profile Portrait Image"
+            name="avatarUrl"
+            value={formData.avatarUrl}
+            onChange={(url) => setFormData(prev => ({ ...prev, avatarUrl: url }))}
+            placeholder="e.g. /assets/img/krishan-portrait.jpg"
+            required
+            inputClassName="form-input-premium animate-reveal"
+            labelClassName="form-label-premium"
+          />
           <div className="space-y-1.5 md:col-span-2">
             <label className="form-label-premium">CV Download Link</label>
             <input
@@ -249,10 +257,64 @@ export default function ProfileEditor({ initialProfile }: ProfileEditorProps) {
               className="form-input-premium"
             />
           </div>
+          <div className="space-y-1.5">
+            <label className="form-label-premium">Instagram Profile URL</label>
+            <input
+              type="url"
+              name="social_instagram"
+              value={formData.socialLinks.instagram}
+              onChange={handleChange}
+              placeholder="https://instagram.com/username"
+              className="form-input-premium"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="form-label-premium">Facebook Profile URL</label>
+            <input
+              type="url"
+              name="social_facebook"
+              value={formData.socialLinks.facebook}
+              onChange={handleChange}
+              placeholder="https://facebook.com/username"
+              className="form-input-premium"
+            />
+          </div>
         </div>
       </div>
 
-      {/* SECTION 4: DETAILED BIO */}
+      {/* SECTION 4: SEO METADATA */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-black/5 dark:border-white/5 pb-2">
+          <Search className="w-5 h-5 text-primary" />
+          <h3 className="text-sm font-bold uppercase tracking-wider text-text-primary">SEO Metadata</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-1.5">
+            <label className="form-label-premium">Meta Description</label>
+            <textarea
+              name="metaDescription"
+              value={formData.metaDescription}
+              onChange={handleChange}
+              rows={3}
+              placeholder="Brief description for search engines..."
+              className="form-input-premium resize-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="form-label-premium">Keywords</label>
+            <textarea
+              name="keywords"
+              value={formData.keywords}
+              onChange={handleChange}
+              rows={3}
+              placeholder="comma, separated, keywords, for, seo"
+              className="form-input-premium resize-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 5: DETAILED BIO */}
       <div className="space-y-4">
         <div className="flex items-center gap-2 border-b border-black/5 dark:border-white/5 pb-2">
           <FileText className="w-5 h-5 text-primary" />

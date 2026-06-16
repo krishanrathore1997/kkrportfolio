@@ -14,9 +14,14 @@ import {
   MessageSquare,
   Inbox,
   ChevronRight,
+  Wrench,
 } from "lucide-react";
 
-export default function SidebarNav() {
+interface SidebarNavProps {
+  onItemClick?: () => void;
+}
+
+export default function SidebarNav({ onItemClick }: SidebarNavProps) {
   const pathname = usePathname();
 
   const menuItems = [
@@ -29,6 +34,7 @@ export default function SidebarNav() {
     { name: "Portfolio", icon: Image, href: "/admin/portfolio" },
     { name: "Reviews", icon: MessageSquare, href: "/admin/reviews" },
     { name: "Contact Leads", icon: Inbox, href: "/admin/contact" },
+    { name: "Debug Uploads", icon: Wrench, href: "/admin/debug" },
   ];
 
   return (
@@ -41,15 +47,16 @@ export default function SidebarNav() {
           <Link
             key={index}
             href={item.href}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group font-semibold text-xs tracking-wider uppercase hover:translate-x-1 ${isActive
-                ? "bg-primary text-white shadow-lg shadow-primary/20"
-                : "text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 hover:text-primary"
+            onClick={onItemClick}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group font-bold text-[10px] tracking-wider uppercase hover:translate-x-1 border ${isActive
+                ? "bg-gradient-to-r from-primary/15 to-primary/5 text-primary border-primary/25 shadow-sm shadow-primary/5"
+                : "text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 hover:text-primary border-transparent"
               }`}
           >
             <div className="flex items-center gap-3">
               <Icon
                 className={`w-4 h-4 transition-colors duration-300 ${isActive
-                    ? "text-black"
+                    ? "text-primary"
                     : "text-text-secondary group-hover:text-primary"
                   }`}
               />
@@ -57,7 +64,7 @@ export default function SidebarNav() {
             </div>
             <ChevronRight
               className={`w-3.5 h-3.5 transition-all duration-300 ${isActive
-                  ? "opacity-100 translate-x-0.5 text-black"
+                  ? "opacity-100 translate-x-0.5 text-primary"
                   : "opacity-0 group-hover:opacity-100 text-primary"
                 }`}
             />
@@ -67,3 +74,4 @@ export default function SidebarNav() {
     </nav>
   );
 }
+

@@ -19,7 +19,7 @@ export default function Services({ services }: ServicesProps) {
   // Safe helper to render Lucide icon dynamically
   const renderIcon = (iconName: string) => {
     // Standard lookup or fallback
-    const IconComponent = (Icons as any)[iconName] || Icons.HelpCircle;
+    const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[iconName] || Icons.HelpCircle;
     return <IconComponent className="w-8 h-8" />;
   };
 
