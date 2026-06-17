@@ -152,7 +152,7 @@ export default function BannerSlider({ banners }: BannerSliderProps) {
 
         {/* Slider Window Container */}
         <div
-          className="max-w-5xl mx-auto relative px-4 sm:px-12"
+          className="relative sm:px-12"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
