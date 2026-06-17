@@ -53,7 +53,7 @@ export default function AdminSidebar({ username }: AdminSidebarProps) {
           <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl">
             <img
               src="/assets/img/white-logo.png"
-              alt="Build By Krish logo"
+              alt="build with Krish logo"
               className="h-full w-full object-cover rounded-lg"
             />
           </span>
@@ -129,7 +129,7 @@ export default function AdminSidebar({ username }: AdminSidebarProps) {
               <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
                 <img
                   src="/assets/img/white-logo.png"
-                  alt="Build By Krish logo"
+                  alt="build with Krish logo"
                   className="h-full w-full object-cover rounded-xl"
                 />
               </span>

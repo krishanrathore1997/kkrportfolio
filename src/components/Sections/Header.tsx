@@ -107,7 +107,7 @@ export default function Header({ phone }: HeaderProps) {
           <span className="relative flex h-[56px] w-[56px] shrink-0 items-center justify-center overflow-hidden rounded-2xl transition-transform duration-300 group-hover:scale-105">
             <img
               src={theme == "light" ? "/assets/img/white-logo.png" : "/assets/img/dark-logo.png"}
-              alt="Build By Krish logo"
+              alt="build with Krish logo"
               className="h-full w-full object-cover"
               onError={(e) => {
                 e.currentTarget.onerror = null;
@@ -116,7 +116,7 @@ export default function Header({ phone }: HeaderProps) {
             />
           </span>
           <span className="font-bold text-base md:text-lg tracking-wider text-text-primary uppercase group-hover:text-primary transition-colors">
-            Build By Krish
+            buildwithKrish
           </span>
         </Link>
 

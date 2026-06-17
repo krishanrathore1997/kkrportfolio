@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     "Node.js Developer",
     "Ahmedabad",
     "Freelance Developer India",
-    "Build By Krish"
+    "build with Krish"
   ],
   icons: {
     icon: [
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
     url: baseUrl,
     title: "KKR - Personal Portfolio | Krishan Kumar Rathore",
     description: "Krishan Kumar Rathore is a dynamic Full Stack Software Engineer and Developer building modern, high-performance web applications using React, Next.js, Laravel, Node.js, and MongoDB.",
-    siteName: "Build By Krish Portfolio",
+    siteName: "build with Krish Portfolio",
     images: [
       {
         url: "/assets/img/facebook-cover.png",
         width: 1200,
         height: 630,
-        alt: "Krishan Kumar Rathore Portfolio - Build By Krish",
+        alt: "Krishan Kumar Rathore Portfolio - build with Krish",
       },
     ],
   },
@@ -127,7 +127,7 @@ export default function RootLayout({
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "name": "Build By Krish",
+    "name": "build with Krish",
     "image": `${baseUrl}/assets/img/white-logo.png`,
     "url": baseUrl,
     "telephone": "+919106035651",

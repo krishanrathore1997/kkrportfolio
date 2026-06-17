@@ -77,20 +77,20 @@ export async function POST(req: NextRequest) {
         });
 
         await transporter.sendMail({
-          from: process.env.EMAIL_FROM || '"Build by Krish Admin" <noreply@buildbykrish.com>',
+          from: process.env.EMAIL_FROM || '"build with Krish Admin" <noreply@buildbykrish.com>',
           to: admin.email || email,
-          subject: "Password Reset Request - Build by Krish Admin Portal",
+          subject: "Password Reset Request - build with Krish Admin Portal",
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; background-color: #ffffff;">
               <h2 style="color: #C59B4C; font-size: 24px; font-weight: bold; margin-bottom: 20px;">Password Reset Request</h2>
-              <p>You requested a password reset for the Build by Krish Admin Portal.</p>
+              <p>You requested a password reset for the build with Krish Admin Portal.</p>
               <p>Please click the button below to reset your password. This link is valid for 1 hour.</p>
               <div style="margin: 30px 0; text-align: center;">
                 <a href="${resetLink}" style="background-color: #C59B4C; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Reset Password</a>
               </div>
               <p style="color: #6e7075; font-size: 14px;">If you did not request this, you can safely ignore this email.</p>
               <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
-              <p style="color: #9ca3af; font-size: 12px; text-align: center;">Build by Krish &copy; ${new Date().getFullYear()}</p>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center;">build with Krish &copy; ${new Date().getFullYear()}</p>
             </div>
           `,
         });

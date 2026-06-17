@@ -171,7 +171,7 @@ export default function AdminLogin() {
           <div className="flex justify-center">
             <img
               src="/assets/img/white-logo.png"
-              alt="Build By Krish logo"
+              alt="build with Krish logo"
               className="h-20 w-20 rounded-2xl object-cover"
             />
           </div>
