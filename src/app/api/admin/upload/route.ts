@@ -38,8 +38,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Validate environment variables before upload IF R2 is enabled
-    if (isR2Enabled) {
+    // 2. Validate environment variables before upload IF R2 is enabled OR in production
+    const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
+    const useR2 = isR2Enabled || isProduction;
+
+    if (useR2) {
       const accountId = process.env.R2_ACCOUNT_ID;
       const accessKeyId = process.env.R2_ACCESS_KEY_ID;
       const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
@@ -54,9 +57,12 @@ export async function POST(req: NextRequest) {
         if (!bucketName) missingVars.push("R2_BUCKET_NAME");
         if (!publicUrl) missingVars.push("R2_PUBLIC_URL");
 
-        console.error("Missing R2 environment variables:", missingVars.join(", "));
+        console.error("Missing R2 environment variables in production:", missingVars.join(", "));
         return NextResponse.json(
-          { success: false, message: "Server misconfiguration: missing storage credentials." },
+          {
+            success: false,
+            message: `Server misconfiguration: missing Cloudflare R2 environment variables (${missingVars.join(", ")}) in production. Please verify your Vercel Dashboard project settings.`,
+          },
           { status: 500 }
         );
       }
@@ -102,7 +108,7 @@ export async function POST(req: NextRequest) {
       .split(/[\\/]/)
       .pop()
       ?.replace(/[^a-zA-Z0-9.-]/g, "_") || "unnamed";
-    
+
     let fileUrl = "";
     let fileKey = "";
 
@@ -110,7 +116,7 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    if (isR2Enabled) {
+    if (useR2) {
       const now = new Date();
       const year = now.getUTCFullYear().toString();
       const month = (now.getUTCMonth() + 1).toString().padStart(2, "0");
