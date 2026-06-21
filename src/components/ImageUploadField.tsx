@@ -214,17 +214,17 @@ export default function ImageUploadField({
             </div>
 
             {/* Path Details and Controls */}
-            <div className="flex-grow w-full space-y-2.5">
+            <div className="flex-grow w-full min-w-0 space-y-2.5">
               <div>
                 <span className="text-[9px] text-text-secondary font-bold uppercase tracking-wider block">Uploaded path</span>
-                <div className="flex items-center gap-2 mt-1">
-                  <code className="text-xs font-mono px-2.5 py-1.5 rounded-lg bg-white/60 dark:bg-bg-card/60 text-text-primary border border-black/5 dark:border-white/5 select-all truncate max-w-[200px] sm:max-w-[280px] block">
+                <div className="flex items-center gap-2 mt-1 w-full min-w-0">
+                  <code className="text-xs font-mono px-2.5 py-1.5 rounded-lg bg-white/60 dark:bg-bg-card/60 text-text-primary border border-black/5 dark:border-white/5 select-all truncate flex-grow min-w-0">
                     {value}
                   </code>
                   <button
                     type="button"
                     onClick={copyPath}
-                    className="p-1.5 rounded-lg bg-white dark:bg-bg-card hover:bg-primary/20 hover:text-primary text-text-secondary border border-black/5 dark:border-white/5 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg bg-white dark:bg-bg-card hover:bg-primary/20 hover:text-primary text-text-secondary border border-black/5 dark:border-white/5 transition-colors cursor-pointer shrink-0"
                     title="Copy Path"
                   >
                     {copied ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5" />}
@@ -233,7 +233,7 @@ export default function ImageUploadField({
               </div>
 
               {/* Action buttons */}
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}

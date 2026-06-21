@@ -122,7 +122,8 @@ export default function About({ profile }: AboutProps) {
                 <div className="pt-6">
                   <a
                     href={profile.cvUrl}
-                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-6 py-3.5 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-primary-hover hover:scale-105 active:scale-[0.98] transition-all duration-300 shadow-lg shadow-primary/15 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />

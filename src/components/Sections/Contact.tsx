@@ -212,7 +212,7 @@ export default function Contact({ email, phone, address, socialLinks }: ContactP
               <h4 className="text-base font-bold text-text-primary tracking-wide">
                 Connect with my social channels
               </h4>
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-4">
                 {socialLinks.linkedin && (
                   <a
                     href={socialLinks.linkedin}

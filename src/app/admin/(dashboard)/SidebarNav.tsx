@@ -24,6 +24,8 @@ interface SidebarNavProps {
 export default function SidebarNav({ onItemClick }: SidebarNavProps) {
   const pathname = usePathname();
 
+  const isDev = process.env.NODE_ENV === "development";
+
   const menuItems = [
     { name: "General Bio", icon: User, href: "/admin" },
     { name: "Hero Slides", icon: Sparkles, href: "/admin/slides" },
@@ -34,7 +36,7 @@ export default function SidebarNav({ onItemClick }: SidebarNavProps) {
     { name: "Portfolio", icon: Image, href: "/admin/portfolio" },
     { name: "Reviews", icon: MessageSquare, href: "/admin/reviews" },
     { name: "Contact Leads", icon: Inbox, href: "/admin/contact" },
-    { name: "Debug Uploads", icon: Wrench, href: "/admin/debug" },
+    ...(isDev ? [{ name: "Debug Uploads", icon: Wrench, href: "/admin/debug" }] : []),
   ];
 
   return (

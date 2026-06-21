@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { UploadCloud, Trash2, Copy, ExternalLink, RefreshCw } from "lucide-react";
+import { notFound } from "next/navigation";
 
 interface UploadedFile {
   name: string;
@@ -35,8 +36,15 @@ export default function DebugUploadPage() {
   };
 
   useEffect(() => {
-    fetchFiles();
+    if (process.env.NODE_ENV === "development") {
+      fetchFiles();
+    }
   }, []);
+
+  if (process.env.NODE_ENV !== "development") {
+    notFound();
+    return null;
+  }
 
   const handleUpload = async (file: File) => {
     // 1. Client-side size check (1.5MB)

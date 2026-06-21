@@ -121,56 +121,58 @@ export default function AdminSidebar({ username }: AdminSidebarProps) {
       </aside>
 
       {/* Desktop Sidebar Panel */}
-      <aside className="hidden md:flex w-64 bg-bg-card/60 dark:bg-bg-card/40 backdrop-blur-xl border-r border-border-subtle flex-col justify-between py-6 shrink-0 z-30 shadow-[1px_0_10px_rgba(0,0,0,0.02)] transition-all duration-300">
-        <div>
-          {/* Logo Heading */}
-          <div className="px-6 mb-8 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
-                <img
-                  src="/assets/img/white-logo.png"
-                  alt="build with Krish logo"
-                  className="h-full w-full object-cover rounded-xl"
-                />
-              </span>
+      <div className="hidden md:flex p-6 pr-0 z-30">
+        <aside className="w-64 bg-bg-card/40 dark:bg-bg-card/20 backdrop-blur-2xl border border-black/5 dark:border-white/5 rounded-[2.5rem] flex flex-col justify-between py-8 shrink-0 shadow-2xl transition-all duration-300">
+          <div>
+            {/* Logo Heading */}
+            <div className="px-8 mb-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <span className="relative flex h-12 w-12 shrink-0 items-center justify-center">
+                  <img
+                    src="/assets/img/white-logo.png"
+                    alt="build with Krish logo"
+                    className="h-full w-full object-cover rounded-xl shadow-lg"
+                  />
+                </span>
+                <div>
+                  <h2 className="text-sm font-black tracking-widest uppercase text-text-primary">KKR Admin</h2>
+                  <span className="text-[9px] text-primary font-bold uppercase tracking-wider block">Dashboard Panel</span>
+                </div>
+              </div>
+
+              {/* Desktop Theme Switcher */}
+              <button
+                onClick={toggleTheme}
+                className="p-2.5 rounded-xl bg-black/5 dark:bg-white/5 hover:bg-primary/15 text-text-primary hover:text-primary transition-all cursor-pointer border border-transparent hover:scale-105 active:scale-95 shadow-sm"
+                aria-label="Toggle Theme"
+              >
+                {mounted && theme === "dark" ? (
+                  <Sun className="w-4 h-4 text-primary" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+
+            <SidebarNav />
+          </div>
+
+          {/* Footer & Logout */}
+          <div className="px-6 mt-8 border-t border-black/5 dark:border-white/5 pt-8 space-y-5">
+            <div className="flex items-center gap-3 px-2">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-primary-hover text-white flex items-center justify-center font-bold text-sm shadow-[0_4px_12px_rgba(197,155,76,0.3)] transition-transform duration-300 hover:scale-105">
+                {username.charAt(0).toUpperCase()}
+              </div>
               <div>
-                <h2 className="text-sm font-black tracking-widest uppercase text-text-primary">KKR Admin</h2>
-                <span className="text-[9px] text-primary font-bold uppercase tracking-wider block">Dashboard Panel</span>
+                <p className="text-xs font-bold text-text-primary uppercase tracking-wide">{username}</p>
+                <span className="text-[10px] text-text-secondary block">Administrator</span>
               </div>
             </div>
 
-            {/* Desktop Theme Switcher */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-xl bg-black/5 dark:bg-white/5 hover:bg-primary/15 text-text-primary hover:text-primary transition-all cursor-pointer border border-transparent hover:scale-105 active:scale-95"
-              aria-label="Toggle Theme"
-            >
-              {mounted && theme === "dark" ? (
-                <Sun className="w-3.5 h-3.5 text-primary" />
-              ) : (
-                <Moon className="w-3.5 h-3.5" />
-              )}
-            </button>
+            <AdminLogoutButton />
           </div>
-
-          <SidebarNav />
-        </div>
-
-        {/* Footer & Logout */}
-        <div className="px-4 mt-8 border-t border-border-subtle pt-6 space-y-4">
-          <div className="flex items-center gap-3 px-4">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-primary-hover text-white flex items-center justify-center font-bold text-sm shadow-[0_4px_12px_rgba(197,155,76,0.25)] transition-transform duration-300 hover:scale-105">
-              {username.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <p className="text-xs font-bold text-text-primary uppercase tracking-wide">{username}</p>
-              <span className="text-[10px] text-text-secondary block">Administrator</span>
-            </div>
-          </div>
-
-          <AdminLogoutButton />
-        </div>
-      </aside>
+        </aside>
+      </div>
     </>
   );
 }

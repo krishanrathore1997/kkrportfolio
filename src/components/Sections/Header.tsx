@@ -116,7 +116,7 @@ export default function Header({ phone }: HeaderProps) {
             />
           </span>
           <span className="font-bold text-base md:text-lg tracking-wider text-text-primary uppercase group-hover:text-primary transition-colors">
-            buildwithKrish
+            build with Krish
           </span>
         </Link>
 
@@ -191,7 +191,7 @@ export default function Header({ phone }: HeaderProps) {
             ))}
           </ul>
 
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-border-subtle">
+          <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-border-subtle">
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-primary" />
               <a href={`tel:${phone}`} className="text-sm font-semibold text-text-primary">
