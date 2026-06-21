@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifySupabaseAuth, createSupabaseUserClient } from "@/lib/supabase";
-import { isR2Enabled, r2Client } from "@/lib/r2";
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { verifySupabaseAuth, createSupabaseUserClient, supabaseAdmin } from "@/lib/supabase";
 import { unlink } from "fs/promises";
 import { join } from "path";
 
@@ -85,28 +83,23 @@ export async function DELETE(req: NextRequest) {
         }
       }
     } else {
-      // Cloudflare R2 Delete
-      if (!isR2Enabled || !r2Client) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Failed to delete: R2 storage is not configured on this server instance.",
-          },
-          { status: 500 }
-        );
-      }
-
+      // Delete from Supabase Storage
       try {
-        await r2Client.send(
-          new DeleteObjectCommand({
-            Bucket: fileRecord.bucket_name,
-            Key: fileRecord.file_key,
-          })
-        );
-      } catch (r2Error) {
-        console.error("Failed to delete file from R2:", r2Error);
+        const { error: storageError } = await supabaseAdmin.storage
+          .from(fileRecord.bucket_name)
+          .remove([fileRecord.file_key]);
+
+        if (storageError) {
+          console.error("Failed to delete file from Supabase Storage:", storageError);
+          return NextResponse.json(
+            { success: false, message: "Failed to delete file from Supabase Storage." },
+            { status: 500 }
+          );
+        }
+      } catch (storageException) {
+        console.error("Supabase Storage delete exception:", storageException);
         return NextResponse.json(
-          { success: false, message: "Failed to delete file from Cloudflare R2." },
+          { success: false, message: "Exception occurred during Supabase Storage deletion." },
           { status: 500 }
         );
       }

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
-import { r2Client, isR2Enabled } from "@/lib/r2";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { supabaseAdmin, ensureBucketExists } from "@/lib/supabase";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 
@@ -38,30 +37,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Validate environment variables before upload IF R2 is enabled OR in production
+    // 2. Validate environment variables before upload IF Supabase is enabled OR in production
     const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
-    const useR2 = isR2Enabled || isProduction;
+    const hasSupabaseCreds = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const useSupabaseStorage = hasSupabaseCreds || isProduction;
 
-    if (useR2) {
-      const accountId = process.env.R2_ACCOUNT_ID;
-      const accessKeyId = process.env.R2_ACCESS_KEY_ID;
-      const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
-      const bucketName = process.env.R2_BUCKET_NAME;
-      const publicUrl = process.env.R2_PUBLIC_URL;
+    if (useSupabaseStorage) {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-      if (!accountId || !accessKeyId || !secretAccessKey || !bucketName || !publicUrl) {
+      if (!supabaseUrl || !serviceRoleKey) {
         const missingVars = [];
-        if (!accountId) missingVars.push("R2_ACCOUNT_ID");
-        if (!accessKeyId) missingVars.push("R2_ACCESS_KEY_ID");
-        if (!secretAccessKey) missingVars.push("R2_SECRET_ACCESS_KEY");
-        if (!bucketName) missingVars.push("R2_BUCKET_NAME");
-        if (!publicUrl) missingVars.push("R2_PUBLIC_URL");
+        if (!supabaseUrl) missingVars.push("NEXT_PUBLIC_SUPABASE_URL");
+        if (!serviceRoleKey) missingVars.push("SUPABASE_SERVICE_ROLE_KEY");
 
-        console.error("Missing R2 environment variables in production:", missingVars.join(", "));
+        console.error("Missing Supabase environment variables in production:", missingVars.join(", "));
         return NextResponse.json(
           {
             success: false,
-            message: `Server misconfiguration: missing Cloudflare R2 environment variables (${missingVars.join(", ")}) in production. Please verify your Vercel Dashboard project settings.`,
+            message: `Server misconfiguration: missing Supabase environment variables (${missingVars.join(", ")}) in production. Please verify your Vercel Dashboard project settings.`,
           },
           { status: 500 }
         );
@@ -116,28 +110,36 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    if (useR2) {
+    if (useSupabaseStorage) {
       const now = new Date();
       const year = now.getUTCFullYear().toString();
       const month = (now.getUTCMonth() + 1).toString().padStart(2, "0");
       fileKey = `uploads/${year}/${month}/${uuid}-${safeFileName}`;
 
-      const bucketName = process.env.R2_BUCKET_NAME!;
-      const publicUrl = process.env.R2_PUBLIC_URL!;
+      const bucketName = process.env.SUPABASE_STORAGE_BUCKET || "portfolio";
 
-      // 7. Upload buffer to Cloudflare R2
-      await r2Client.send(
-        new PutObjectCommand({
-          Bucket: bucketName,
-          Key: fileKey,
-          Body: buffer,
-          ContentType: mimeType,
-          CacheControl: "public, max-age=31536000",
-        })
-      );
+      // 7. Ensure bucket exists
+      await ensureBucketExists(bucketName);
 
-      const publicBaseUrl = publicUrl.replace(/\/$/, "");
-      fileUrl = `${publicBaseUrl}/${fileKey}`;
+      // 8. Upload buffer to Supabase Storage
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from(bucketName)
+        .upload(fileKey, buffer, {
+          contentType: mimeType,
+          upsert: true,
+        });
+
+      if (uploadError) {
+        console.error("Supabase Storage upload error:", uploadError);
+        throw uploadError;
+      }
+
+      // 9. Get Public URL
+      const { data: urlData } = supabaseAdmin.storage
+        .from(bucketName)
+        .getPublicUrl(fileKey);
+
+      fileUrl = urlData.publicUrl;
     } else {
       // --- Local Disk Upload Fallback Path ---
       const uploadDir = join(process.cwd(), "public", "uploads");

@@ -110,3 +110,43 @@ export function createSupabaseUserClient(token: string) {
     },
   });
 }
+
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+export const supabaseAdmin = createClient(
+  SUPABASE_URL || "",
+  SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY || "",
+  {
+    auth: {
+      persistSession: false,
+    },
+  }
+);
+
+/**
+ * Ensures the configured Supabase Storage bucket exists and is public.
+ */
+export async function ensureBucketExists(bucket: string) {
+  try {
+    const { data: buckets, error: listError } = await supabaseAdmin.storage.listBuckets();
+    if (listError) {
+      console.error("Error listing Supabase Storage buckets:", listError);
+      return;
+    }
+
+    const exists = buckets.some((b) => b.name === bucket);
+    if (!exists) {
+      const { error: createError } = await supabaseAdmin.storage.createBucket(bucket, {
+        public: true,
+      });
+      if (createError) {
+        console.error(`Failed to create public Supabase Storage bucket "${bucket}":`, createError);
+      } else {
+        console.log(`Successfully created public Supabase Storage bucket: "${bucket}"`);
+      }
+    }
+  } catch (err) {
+    console.error("Exception checking/creating Supabase Storage bucket:", err);
+  }
+}
+

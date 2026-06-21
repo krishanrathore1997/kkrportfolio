@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifySupabaseAuth, createSupabaseUserClient } from "@/lib/supabase";
-import { isR2Enabled, r2Client } from "@/lib/r2";
-import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { verifySupabaseAuth, createSupabaseUserClient, supabaseAdmin, ensureBucketExists } from "@/lib/supabase";
 import { writeFile, mkdir, unlink } from "fs/promises";
 import { join } from "path";
 
@@ -31,7 +29,7 @@ function sanitizeFilename(filename: string): string {
 
 export async function POST(req: NextRequest) {
   let uploadedKey: string | null = null;
-  let isUploadedToR2 = false;
+  let isUploadedToSupabase = false;
   let localFilePath: string | null = null;
 
   try {
@@ -99,21 +97,34 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    if (isR2Enabled && r2Client) {
-      // --- Cloudflare R2 Upload Path ---
-      bucketName = process.env.R2_BUCKET_NAME!;
-      const r2PublicBase = process.env.R2_PUBLIC_URL?.replace(/\/$/, "") || "";
-      fileUrl = `${r2PublicBase}/${fileKey}`;
+    const hasSupabaseCreds = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const useSupabaseStorage = hasSupabaseCreds || process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
 
-      await r2Client.send(
-        new PutObjectCommand({
-          Bucket: bucketName,
-          Key: fileKey,
-          Body: buffer,
-          ContentType: mimeType,
-        })
-      );
-      isUploadedToR2 = true;
+    if (useSupabaseStorage) {
+      // --- Supabase Storage Upload Path ---
+      bucketName = process.env.SUPABASE_STORAGE_BUCKET || "portfolio";
+      
+      // Ensure the bucket exists
+      await ensureBucketExists(bucketName);
+
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from(bucketName)
+        .upload(fileKey, buffer, {
+          contentType: mimeType,
+          upsert: true,
+        });
+
+      if (uploadError) {
+        console.error("Supabase Storage upload error:", uploadError);
+        throw uploadError;
+      }
+
+      const { data: urlData } = supabaseAdmin.storage
+        .from(bucketName)
+        .getPublicUrl(fileKey);
+
+      fileUrl = urlData.publicUrl;
+      isUploadedToSupabase = true;
     } else {
       // --- Local Disk Upload Fallback Path ---
       bucketName = "local-disk";
@@ -161,16 +172,14 @@ export async function POST(req: NextRequest) {
     console.error("Upload API route error:", error);
 
     // Rollback storage uploads upon DB failure to prevent orphan files
-    if (isUploadedToR2 && r2Client && uploadedKey) {
+    if (isUploadedToSupabase && uploadedKey) {
       try {
-        await r2Client.send(
-          new DeleteObjectCommand({
-            Bucket: process.env.R2_BUCKET_NAME!,
-            Key: uploadedKey,
-          })
-        );
+        const bucketName = process.env.SUPABASE_STORAGE_BUCKET || "portfolio";
+        await supabaseAdmin.storage
+          .from(bucketName)
+          .remove([uploadedKey]);
       } catch (cleanupError) {
-        console.error("Failed to clean up R2 file during rollback:", cleanupError);
+        console.error("Failed to clean up Supabase Storage file during rollback:", cleanupError);
       }
     } else if (localFilePath) {
       try {
